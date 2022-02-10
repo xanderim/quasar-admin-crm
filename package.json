@@ -11,20 +11,21 @@
     "test": "echo \"No test specified\" && exit 0"
   },
   "dependencies": {
-    "@quasar/extras": "^1.0.0",
-    "apexcharts": "^3.24.0",
-    "echarts": "^4.6.0",
-    "node-sass": "^4.14.1",
-    "quasar": "^1.0.0",
-    "serialize-javascript": "^5.0.1",
-    "vue-apexcharts": "^1.5.2",
-    "vue-echarts-v3": "^2.0.1",
-    "vuedraggable": "^2.23.2",
-    "yargs-parser": "^20.2.0"
+    "@quasar/extras": "^1.12.5",
+    "apexcharts": "^3.33.1",
+    "echarts": "^5.3.0",
+    "node-sass": "^7.0.1",
+    "quasar": "^2.5.5",
+    "serialize-javascript": "^6.0.0",
+    "vue": "^3.0.0",
+    "vue-apexcharts": "^1.6.2",
+    "vue-echarts": "^6.0.2",
+    "vue-router": "^4.0.0",
+    "vuedraggable": "^4.1.0",
+    "yargs-parser": "^21.0.0"
   },
   "devDependencies": {
-    "@quasar/app": "^1.0.0",
-    "@quasar/quasar-app-extension-qcalendar": "^1.5.3"
+    "@quasar/app": "^3.3.2"
   },
   "engines": {
     "node": ">= 10.18.1",

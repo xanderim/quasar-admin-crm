@@ -254,12 +254,11 @@
 </template>
 
 <script>
-    import Vue from 'vue';
-    import IEcharts from 'vue-echarts-v3/src/full.js';
-    import echarts from 'echarts'
+    import ECharts from 'vue-echarts'
+    import * as echarts from 'echarts/dist/echarts.esm';
+
     import {exportFile} from 'quasar';
 
-    Vue.component('IEcharts', IEcharts);
 
     function wrapCsvValue(val, formatFn) {
         let formatted = formatFn !== void 0
@@ -276,7 +275,9 @@
     }
 
     export default {
-        data() {
+      components: {IEcharts: ECharts},
+
+      data() {
             return {
                 filter: '',
                 mode: 'list',

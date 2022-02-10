@@ -66,7 +66,7 @@
             <q-separator inset></q-separator>
 
             <q-card-section>
-              <IEcharts :option="barOptions" ref="bar" :resizable="true" style="height:220px"/>
+              <v-chart :option="option" ref="bar" :resizable="true" style="height:220px"/>
             </q-card-section>
           </q-card>
         </div>
@@ -85,7 +85,7 @@
             <q-separator inset></q-separator>
 
             <q-card-section>
-              <IEcharts ref="line" :option="lineChartOption" :resizable="true" style="height:220px"/>
+<!--              <v-chart ref="line" :option="lineChartOption" :resizable="true" style="height:220px"/>-->
             </q-card-section>
           </q-card>
         </div>
@@ -105,7 +105,7 @@
             <q-separator inset></q-separator>
 
             <q-card-section>
-              <IEcharts :option="gaugeOptions" ref="gauge" :resizable="true" style="height:220px"/>
+<!--              <v-chart :option="gaugeOptions" ref="gauge" :resizable="true" style="height:220px"/>-->
             </q-card-section>
           </q-card>
         </div>
@@ -126,7 +126,7 @@
           <q-separator inset></q-separator>
 
           <q-card-section>
-            <IEcharts ref="pie" :option="pieOptions" :resizable="true" style="height:270px"/>
+<!--            <v-chart ref="pie" :option="pieOptions" :resizable="true" style="height:270px"/>-->
           </q-card-section>
         </q-card>
       </div>
@@ -144,7 +144,7 @@
           <q-separator inset></q-separator>
 
           <q-card-section>
-            <IEcharts ref="stack_bar" :option="stackedBarOptions" :resizable="true" style="height:270px"/>
+<!--            <v-chart ref="stack_bar" :option="stackedBarOptions" :resizable="true" style="height:270px"/>-->
           </q-card-section>
         </q-card>
       </div>
@@ -216,11 +216,31 @@
 </template>
 
 <script>
-    import Vue from 'vue';
-    import IEcharts from 'vue-echarts-v3/src/full.js';
-    import {exportFile} from 'quasar';
+import { useQuasar } from 'quasar'
 
-    Vue.component('IEcharts', IEcharts);
+    import {exportFile} from 'quasar';
+    import { use } from "echarts/core";
+    import { CanvasRenderer } from "echarts/renderers";
+    import { PieChart, BarChart, LineChart,} from "echarts/charts";
+    import {
+      TitleComponent,
+      TooltipComponent,
+      LegendComponent,
+        GridComponent,
+    } from "echarts/components";
+    import VChart, { THEME_KEY } from "vue-echarts";
+    import { ref, defineComponent } from "vue";
+    use([
+      CanvasRenderer,
+      PieChart,
+      BarChart,
+      LineChart,
+      TitleComponent,
+      TooltipComponent,
+      LegendComponent,
+        GridComponent
+    ]);
+
 
     function wrapCsvValue(val, formatFn) {
         let formatted = formatFn !== void 0
@@ -237,6 +257,62 @@
     }
 
     export default {
+      components: {VChart},
+      setup () {
+        const $q = useQuasar()
+
+
+        const option = ref({
+          grid: {
+            bottom: '20%',
+            left: '15%',
+            top: '3%'
+          },
+          legend: {
+            bottom: 0,
+            textStyle: {
+              color: $q.dark.isActive ? 'white' : '#676767'
+            }
+          },
+          tooltip: {},
+          dataset: {
+            dimensions: ['time_period', 'sale', 'goal'],
+            source: [
+              {time_period: 'Jan 2019', sale: 50, goal: 70},
+              {time_period: 'Feb 2019', sale: 80, goal: 75},
+              {time_period: 'Mar 2019', sale: 86, goal: 80},
+              {time_period: 'Apr 2019', sale: 72, goal: 85}
+            ]
+          },
+          xAxis: {
+            type: 'category',
+            // axisLabel: {
+            //     rotate: 45
+            // }
+            axisLabel: {
+              color: $q.dark.isActive ? 'white' : '#676767'
+            }
+          },
+          yAxis: {
+            // name: 'Goal',
+            // nameLocation: 'center',
+            // nameGap: 30,
+            // nameTextStyle:{
+            //     fontWeight: 'bold'
+            // }
+            axisLabel: {
+              color: $q.dark.isActive ? 'white' : '#676767'
+            }
+          },
+          series: [
+            {type: 'bar', name: 'Sales'},
+            {type: 'bar', name: 'Goals'}
+          ]
+        }
+      );
+
+        return { option };
+      },
         data() {
             return {
                 filter: '',
@@ -338,7 +414,7 @@
                     legend: {
                         bottom: 0,
                         textStyle: {
-                            color: this.$q.dark.isActive ? 'white' : '#676767'
+                            color: $q.dark.isActive ? 'white' : '#676767'
                         }
                     },
                     tooltip: {},
@@ -357,7 +433,7 @@
                         //     rotate: 45
                         // }
                         axisLabel: {
-                            color: this.$q.dark.isActive ? 'white' : '#676767'
+                            color: $q.dark.isActive ? 'white' : '#676767'
                         }
                     },
                     yAxis: {
@@ -368,7 +444,7 @@
                         //     fontWeight: 'bold'
                         // }
                         axisLabel: {
-                            color: this.$q.dark.isActive ? 'white' : '#676767'
+                            color: $q.dark.isActive ? 'white' : '#676767'
                         }
                     },
                     series: [
@@ -387,7 +463,7 @@
                     legend: {
                         bottom: 0,
                         textStyle: {
-                            color: this.$q.dark.isActive ? 'white' : '#676767'
+                            color: $q.dark.isActive ? 'white' : '#676767'
                         }
                     },
                     tooltip: {
@@ -411,7 +487,7 @@
                         //     rotate: 45
                         // }
                         axisLabel: {
-                            color: this.$q.dark.isActive ? 'white' : '#676767'
+                            color: $q.dark.isActive ? 'white' : '#676767'
                         }
                     },
                     yAxis: {
@@ -419,7 +495,7 @@
                             formatter: function (value, index) {
                                 return value + ' %'
                             },
-                            color: this.$q.dark.isActive ? 'white' : '#676767'
+                            color: $q.dark.isActive ? 'white' : '#676767'
                         }
                     },
                     series: [
@@ -438,7 +514,7 @@
                         bottom: 0,
                         width: 300,
                         textStyle: {
-                            color: this.$q.dark.isActive ? 'white' : '#676767'
+                            color: $q.dark.isActive ? 'white' : '#676767'
                         }
                     },
                     series: [
@@ -493,7 +569,7 @@
                     legend: {
                         bottom: 0,
                         textStyle: {
-                            color: this.$q.dark.isActive ? 'white' : '#676767'
+                            color: $q.dark.isActive ? 'white' : '#676767'
                         }
                     },
                     color: ['#3395dd', '#ed892d', '#34393b'],
@@ -524,7 +600,7 @@
                                 formatter: function (value, index) {
                                     return '$' + value;
                                 },
-                                color: this.$q.dark.isActive ? 'white' : '#676767'
+                                color: $q.dark.isActive ? 'white' : '#676767'
                             }
                         },
                     yAxis: [
@@ -533,7 +609,7 @@
                             data: ['Alex Morrow', 'Joanna Carter', 'Jimmy Joanna', 'Mack Hales'],
                             axisLabel: {
                                 fontSize: 12,
-                                color: this.$q.dark.isActive ? 'white' : '#676767'
+                                color: $q.dark.isActive ? 'white' : '#676767'
                             }
                         }
                     ],
@@ -588,7 +664,7 @@
                 )
 
                 if (status !== true) {
-                    this.$q.notify({
+                    $q.notify({
                         message: 'Browser denied file download...',
                         color: 'negative',
                         icon: 'warning'

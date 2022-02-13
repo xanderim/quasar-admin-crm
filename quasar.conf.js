@@ -7,6 +7,7 @@ module.exports = function (ctx) {
     // --> boot files are part of "main.js"
     // https://quasar.dev/quasar-cli/cli-documentation/boot-files
     boot: [
+      'firebase'
     ],
 
     // https://quasar.dev/quasar-cli/quasar-conf-js#Property%3A-css
@@ -62,7 +63,12 @@ module.exports = function (ctx) {
       // Options below are automatically set depending on the env, set them if you want to override
       // preloadChunks: false,
       // extractCSS: false,
-
+      env: {
+        DB_API_KEY: process.env.FB_DB_API_KEY,
+        DB_AUTH_DOMAIN: process.env.FB_DB_AUTH_DOMAIN,
+        DB_PROJECT_ID: process.env.FB_DB_PROJECT_ID,
+        ADMIN_EMAILS: process.env.ADMIN_EMAILS,
+      },
       // https://quasar.dev/quasar-cli/cli-documentation/handling-webpack
       extendWebpack (cfg) {
       }

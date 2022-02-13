@@ -61,7 +61,6 @@ quasar dev
 quasar build
 ```
 
-Do reach out to me at "mayank091193@gmail.com" for queries.
 
 ## Screens UI
 **Dashboard - Dark mode**

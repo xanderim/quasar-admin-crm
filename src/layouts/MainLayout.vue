@@ -59,10 +59,10 @@
         <div style="height: calc(100% - 117px);padding:10px;">
           <q-toolbar>
             <q-avatar>
-              <img src="https://cdn.quasar.dev/img/boy-avatar.png" />
+              <img :src="user.photoURL" />
             </q-avatar>
 
-            <q-toolbar-title>Mayank Patel</q-toolbar-title>
+            <q-toolbar-title>{{user.displayName}}</q-toolbar-title>
           </q-toolbar>
           <hr />
           <q-scroll-area style="height:100%;">
@@ -210,7 +210,7 @@
                 </q-item-section>
 
                 <q-item-section>
-                  Employee Salary List
+                  Invoices
                 </q-item-section>
               </q-item>
 
@@ -277,19 +277,23 @@
           </div>
         </div>
       </q-page>
-      <q-banner inline-actions rounded style="background-color:#5dcf8a" class="z-max shadow-10 q-ma-md absolute absolute-bottom text-white">
-      Looking for beautiful premium Quasar CRM admin template for Vue 3? Please drop me an email. Buy only at <b>$49</b>!
-      <template v-slot:action>
-        <q-btn target="_blank" type="a" href="https://next-quasar-admin-crm.netlify.com/" flat style="background-color:purple" class="text-capitalize q-mr-md" label="Live Demo"></q-btn>
-        <q-btn type="a" href="mailto:mayank091193@gmail.com" flat style="background-color:#172b4d" class="text-capitalize" label="Email me"></q-btn>
-      </template>
-    </q-banner>
     </q-page-container>
   </q-layout>
 </template>
 
 <script>
+import { getAuth, signOut } from "firebase/auth";
+
 export default {
+
+  setup() {
+    const user = getAuth().currentUser
+    console.log(user)
+    return {
+      user
+    }
+  },
+
   data() {
     return {
       left: false
@@ -297,8 +301,15 @@ export default {
   },
   methods: {
     logoutNotify() {
-      this.$q.notify({
-        message: "Logged out"
+      const auth = getAuth();
+      signOut(auth).then(() => {
+        this.$q.notify({
+          message: "Logged out"
+        });
+      }).catch((error) => {
+        this.$q.notify({
+          message: error
+        });
       });
     }
   }

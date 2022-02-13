@@ -228,8 +228,8 @@ import { useQuasar } from 'quasar'
       LegendComponent,
         GridComponent,
     } from "echarts/components";
-    import VChart, { THEME_KEY } from "vue-echarts";
-    import { ref, defineComponent } from "vue";
+    import { ref } from "vue";
+import ECharts from "vue-echarts";
     use([
       CanvasRenderer,
       PieChart,
@@ -257,7 +257,7 @@ import { useQuasar } from 'quasar'
     }
 
     export default {
-      components: {VChart},
+      components: {'v-chart': ECharts},
       setup () {
         const $q = useQuasar()
 

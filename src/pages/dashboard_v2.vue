@@ -29,9 +29,9 @@
           <q-card class="no-shadow q-pa-sm">
             <q-item class="q-pb-none q-pt-xs">
               <q-item-section>
-                <q-item-label class="text-h4" style="font-weight: 500;letter-spacing: 3px;">{{ expensesTotal }}</q-item-label>
+                <q-item-label class="text-h4" style="font-weight: 500;letter-spacing: 3px;">{{ expensesTotal }}$</q-item-label>
                 <q-item-label :class="!$q.dark.isActive? 'text-grey-7':'text-white'" style="letter-spacing: 1px;">Total
-                  Expenses this month
+                  Expenses {{new Date().toLocaleDateString()}}
                 </q-item-label>
               </q-item-section>
 
@@ -77,9 +77,9 @@
           <q-card class="no-shadow q-pa-sm">
             <q-item class="q-pb-none q-pt-xs">
               <q-item-section>
-                <q-item-label class="text-h4" style="font-weight: 500;letter-spacing: 3px;">720</q-item-label>
-                <q-item-label :class="!$q.dark.isActive? 'text-grey-7':'text-white'" style="letter-spacing: 1px;">New
-                  Customers
+                <q-item-label class="text-h4" style="font-weight: 500;letter-spacing: 3px;">{{ clients.length }}</q-item-label>
+                <q-item-label :class="!$q.dark.isActive? 'text-grey-7':'text-white'" style="letter-spacing: 1px;">
+                  Clients
                 </q-item-label>
               </q-item-section>
 
@@ -90,7 +90,7 @@
             <q-item class="q-py-xs" style="min-height: unset">
               <q-item-section>
                 <div class="progress-base q-my-sm">
-                  <div class="progress-bar-4" style="width:30%"></div>
+                  <div class="progress-bar-4" :style="{width: clients.length / 5 * 100 + '%'}"></div>
                 </div>
               </q-item-section>
             </q-item>
@@ -268,10 +268,11 @@ import {use} from "echarts/core";
 import {CanvasRenderer} from "echarts/renderers";
 import {BarChart, LineChart, PieChart,} from "echarts/charts";
 import {GridComponent, LegendComponent, TitleComponent, TooltipComponent,} from "echarts/components";
-import {date, exportFile} from 'quasar';
+import {exportFile} from 'quasar';
 import ECharts from "vue-echarts";
-import {collection, query, getFirestore, orderBy, getDocs} from "firebase/firestore";
 import {onBeforeMount, ref} from "vue";
+import {API} from "src/services/api";
+import {Balance} from "src/services/balance";
 
 use([
   CanvasRenderer,
@@ -303,36 +304,27 @@ export default {
   components: {'v-chart': ECharts},
 
   setup() {
-    const db = getFirestore()
     const projects = ref([])
     const developers = ref([])
+    const expenses = ref([])
+    const expensesTotal = ref(0)
+    const incomeTotal = ref(0)
+    const clients = ref([])
 
     onBeforeMount(async () => {
-      const projectsData = []
-      const projectsRef = collection(db, "projects");
-      const querySnapshot = await getDocs(projectsRef);
-      querySnapshot.forEach((doc) => {
-        const project = doc.data()
-        project.client = project.client.id.replace('_', ' ').toUpperCase()
-        projectsData.push(project)
-      });
-      projects.value = projectsData
 
-
-      const developersData = []
-      const developersRef = collection(db, "projects");
-      const snapshot = await getDocs(developersRef);
-      snapshot.forEach((doc) => {
-        const developer = doc.data()
-        developer.client = developer.client.id.replace('_', ' ').toUpperCase()
-        developersData.push(developer)
-      });
-      developers.value = developersData
-
+      projects.value = await API.getProjects()
+      developers.value = await API.getDevelopers()
+      expenses.value = await API.getExpenses()
+      clients.value = await API.getClients()
+      incomeTotal.value = await Balance.totalIncome()
+      expensesTotal.value = await Balance.totalExpense()
     })
     return {
       projects,
-      developers
+      developers,
+      expensesTotal,
+      clients
     }
   },
 

@@ -4,6 +4,7 @@ import routes from './routes'
 import { route } from 'quasar/wrappers'
 import { createRouter, createMemoryHistory, createWebHistory, createWebHashHistory } from 'vue-router'
 import { getAuth, onAuthStateChanged } from "firebase/auth";
+import {useQuasar} from "quasar";
 
 /*
  * If not building with SSR mode, you can
@@ -30,7 +31,9 @@ export default route(function (/* { store, ssrContext } */) {
     // quasar.conf.js -> build -> publicPath
     history: createHistory(process.env.MODE === 'ssr' ? void 0 : process.env.VUE_ROUTER_BASE)
   })
+
   Router.beforeEach(async (to, from, next) => {
+    // const $q = useQuasar()
     const user = () => {
       return new Promise((resolve, reject) => {
         const unsubscribe = onAuthStateChanged(getAuth(), (user) => {
@@ -44,8 +47,11 @@ export default route(function (/* { store, ssrContext } */) {
       next()
     } else if (to.path === '/') {
       next()
-    } else {
+    } else if (!ADMIN_EMAILS.includes(currentUser.email)) {
+      // $q.notify({message:'ACCESS DENIED', color: 'red'})
       next('/')
+    } else {
+      // $q.notify({message:'LOGIN REQUIRED', color: 'red'})
     }
   })
   return Router

@@ -47,7 +47,14 @@ module.exports = function (ctx) {
       directives: [],
 
       // Quasar plugins
-      plugins: ['Notify', 'Loading']
+      plugins: ['Notify', 'Loading'],
+      config: {
+        notify: {
+          position: 'top',
+          size: '3rem',
+          color: 'green'
+        }
+      },
     },
 
     // https://quasar.dev/quasar-cli/cli-documentation/supporting-ie
@@ -68,6 +75,7 @@ module.exports = function (ctx) {
         DB_AUTH_DOMAIN: process.env.FB_DB_AUTH_DOMAIN,
         DB_PROJECT_ID: process.env.FB_DB_PROJECT_ID,
         ADMIN_EMAILS: process.env.ADMIN_EMAILS,
+        CLOCKIFY_API: process.env.CLOCKIFY_API,
       },
       // https://quasar.dev/quasar-cli/cli-documentation/handling-webpack
       extendWebpack (cfg) {

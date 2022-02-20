@@ -154,7 +154,7 @@
         <q-card flat bordered class="bg-white">
           <q-table
             title="All Activities"
-            :data="data"
+            :rows="data"
             :hide-header="mode === 'grid'"
             :columns="columns"
             row-key="name"

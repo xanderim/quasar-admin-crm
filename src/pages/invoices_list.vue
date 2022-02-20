@@ -12,6 +12,8 @@
           :pagination.sync="pagination"
       >
         <template v-slot:top-right="props">
+          <q-btn @click="new_invoice=true" outline color="primary" label="Add New" class="q-mr-xs"/>
+
           <q-input outlined dense debounce="300" v-model="filter" placeholder="Search">
             <template v-slot:append>
               <q-icon name="search"/>
@@ -67,22 +69,90 @@
             <q-icon v-if="!props.row.paid" name="close" color="red" size="2em" />
           </q-td>
         </template>
-<!--        <template v-slot:body-cell-detail="props">-->
-<!--          <q-td :props="props">-->
-<!--            <q-btn @click="employee_dialog=true" dense round color="secondary" icon="pageview"/>-->
-<!--          </q-td>-->
-<!--        </template>-->
+        <template v-slot:body-cell-detail="props">
+          <q-td :props="props">
+            <q-btn @click="invoice_dialog=true" dense round color="secondary" icon="pageview"/>
+          </q-td>
+        </template>
         <template v-slot:body-cell-action="props">
           <q-td :props="props">
             <div class="q-gutter-sm">
-              <q-btn dense color="primary" icon="edit"/>
+              <q-btn @click="invoice_dialog=true" dense color="primary" icon="edit"/>
               <q-btn dense color="red" icon="delete"/>
             </div>
           </q-td>
         </template>
       </q-table>
     </q-card>
-    <q-dialog v-model="employee_dialog">
+
+    <q-dialog v-model="new_invoice">
+      <q-card style="width: 600px; max-width: 60vw;">
+        <q-card-section>
+          <div class="text-h6">
+            Add new invoice
+            <q-btn round flat dense icon="close" class="float-right" color="grey-8" v-close-popup></q-btn>
+          </div>
+        </q-card-section>
+        <q-separator inset></q-separator>
+        <q-card-section class="q-pt-none">
+          <q-form class="q-gutter-md">
+            <q-list>
+              <q-item>
+                <q-item-section>
+                  <q-item-label class="q-pb-xs">Client</q-item-label>
+                  <q-input dense outlined v-model="invoice.client" label="Customer Name"/>
+                </q-item-section>
+              </q-item>
+              <q-item>
+                <q-item-section>
+                  <q-item-label class="q-pb-xs">Project</q-item-label>
+                  <q-input dense outlined v-model="invoice.project" label="City"/>
+                </q-item-section>
+              </q-item>
+              <q-item>
+                <q-item-section>
+                  <q-item-label class="q-pb-xs">Amount</q-item-label>
+                  <q-input dense outlined v-model="invoice.amount" label="State"/>
+                </q-item-section>
+              </q-item>
+              <q-item>
+                <q-item-section>
+                  <q-item-label class="q-pb-xs">Last Call</q-item-label>
+                  <q-input
+                      dense
+                      outlined
+                      v-model="invoice.due_date"
+                      mask="date"
+                      label="Last Call"
+                  >
+                    <template v-slot:append>
+                      <q-icon name="event" class="cursor-pointer">
+                        <q-popup-proxy
+                            ref="lastCallProxy"
+                            transition-show="scale"
+                            transition-hide="scale"
+                        >
+                          <q-date
+                              v-model="invoice.due_date"
+                              @input="() => $refs.lastCallProxy.hide()"
+                          />
+                        </q-popup-proxy>
+                      </q-icon>
+                    </template>
+                  </q-input>
+                </q-item-section>
+              </q-item>
+            </q-list>
+          </q-form>
+        </q-card-section>
+
+        <q-card-actions align="right" class="text-teal">
+          <q-btn label="Save" type="submit" color="primary" v-close-popup/>
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
+
+    <q-dialog v-model="invoice_dialog">
       <q-card class="my-card" flat bordered>
         <q-card-section>
           <div class="text-h6">
@@ -145,7 +215,6 @@ export default {
       const invoicesRef = collection(db, "invoices");
       const querySnapshot = await getDocs(query(invoicesRef, orderBy('date')));
       querySnapshot.forEach((doc) => {
-        // doc.data() is never undefined for query doc snapshots
         const invoice = doc.data()
         invoice.date = date.formatDate(invoice.date.toDate(), 'DD.MM.YY')
         invoice.client = invoice.client.id.replace('_', ' ').toUpperCase()
@@ -164,7 +233,8 @@ return {
       filter: "",
       mode: "list",
       invoice: {},
-      employee_dialog: false,
+      new_invoice: false,
+      invoice_dialog: false,
       columns: [
     {
           name: "client",

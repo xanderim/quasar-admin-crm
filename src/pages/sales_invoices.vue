@@ -3,7 +3,7 @@
     <q-card>
       <q-table
         title="Invoices"
-        :data="data"
+        :rows="data"
         :hide-header="mode === 'grid'"
         :columns="columns"
         row-key="name"

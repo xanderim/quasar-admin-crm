@@ -181,7 +181,7 @@
               card-style="background-color: #343a40 !important;color:white"
               card-container-style="background-color: #343a40 !important"
               title="All Activities"
-              :data="data"
+              :rows="data"
               :hide-header="mode === 'grid'"
               table-class="text-white"
               table-header-class="text-white"

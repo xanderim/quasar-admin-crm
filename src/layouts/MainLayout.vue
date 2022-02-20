@@ -120,7 +120,7 @@
 
               <q-item
                 active-class="tab-active"
-                to="/customer_management"
+                to="/clockify_stats"
                 class="q-ma-sm navigation-item"
                 clickable
                 v-ripple
@@ -130,7 +130,7 @@
                 </q-item-section>
 
                 <q-item-section>
-                  Customer Management
+                  Clockify stats
                 </q-item-section>
               </q-item>
 
@@ -206,7 +206,7 @@
                 v-ripple
               >
                 <q-item-section avatar>
-                  <q-icon name="list" />
+                  <q-icon name="attach_money" />
                 </q-item-section>
 
                 <q-item-section>

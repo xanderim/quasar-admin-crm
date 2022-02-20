@@ -3,7 +3,7 @@
     <q-card>
       <q-table
         title="Change Request"
-        :data="data"
+        :rows="data"
         :hide-header="mode === 'grid'"
         :columns="columns"
         row-key="name"

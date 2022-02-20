@@ -111,7 +111,7 @@
 
           <q-card-section>
             <q-table
-              :data="data"
+              :rows="data"
               :hide-header="mode === 'grid'"
               :columns="columns"
               row-key="name"

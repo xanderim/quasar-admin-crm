@@ -179,7 +179,7 @@
           <q-card flat bordered class="shadow">
             <q-table
                 title="All Activities"
-                :data="data"
+                :rows="data"
                 :hide-header="mode === 'grid'"
                 :table-class="$q.dark.isActive?'text-white':'text-grey-8'"
                 :table-header-class="$q.dark.isActive?'text-white':'text-grey-9'"

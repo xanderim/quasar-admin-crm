@@ -34,7 +34,7 @@ class APIService {
     return data
   }
 
-  async getProjects() {
+  async getProjects(addXDEVSProjects=false) {
     const projectsData = this.data.projects
 
     if (!projectsData.length) {
@@ -43,7 +43,11 @@ class APIService {
         const project = doc.data()
         project.id = doc.id
         project.client = project.client.id.replace('_', ' ').toUpperCase()
-        projectsData.push(project)
+        if (project.client === 'XDEVS' && addXDEVSProjects) {
+          projectsData.push(project)
+        } else if (project.client !== 'XDEVS') {
+          projectsData.push(project)
+        }
       });
     }
     return projectsData
@@ -61,8 +65,16 @@ class APIService {
     return await this.getAll('clients')
   }
 
-  async getSummaryReport(workspaceId) {
+  async getSummaryReport(workspaceId, period='month') {
     if (!this.summaryReports.hasOwnProperty(workspaceId)) {
+      let dateRange
+      if (period === 'month')  {
+        dateRange = {
+          "dateRangeStart": date.startOfDate(new Date(), 'month'),
+          "dateRangeEnd": date.endOfDate(new Date(), 'month'),
+        }
+      }
+
       const url = `https://reports.api.clockify.me/v1/workspaces/${workspaceId}/reports/summary`
       const response = await fetch(url, {
         headers: {
@@ -71,8 +83,7 @@ class APIService {
         },
         method: 'POST',
         body: JSON.stringify({
-          "dateRangeStart": date.startOfDate(new Date(), 'month'),
-          "dateRangeEnd": date.endOfDate(new Date(), 'month'),
+          ...dateRange,
           "summaryFilter": {
             "groups": [
               "USER",
